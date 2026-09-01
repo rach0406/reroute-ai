@@ -95,12 +95,21 @@ export default function App() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      {!isLoggedIn && (
-        <LoginModal onLoginSuccess={(user) => { setCurrentUser(user); setIsLoggedIn(true); }} />
-      )}
+  // --- NOT LOGGED IN: Show full-screen login, no app shell underneath ---
+  if (!isLoggedIn) {
+    return (
+      <LoginModal
+        onLoginSuccess={(user) => {
+          setCurrentUser(user);
+          setIsLoggedIn(true);
+        }}
+      />
+    );
+  }
 
+  // --- LOGGED IN: Render full app shell ---
+  return (
+    <div className="h-screen bg-slate-950 text-slate-100 flex flex-col font-sans overflow-hidden">
       {/* Header Bar */}
       <Navbar
         currentUser={currentUser}
@@ -111,16 +120,16 @@ export default function App() {
 
       {/* Toast Alert Banner */}
       {toastMsg && (
-        <div className="bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-2.5 px-6 text-center text-sm shadow-xl flex items-center justify-center space-x-2 animate-bounce">
+        <div className="bg-gradient-to-r from-red-600 to-amber-600 text-white font-bold py-2.5 px-6 text-center text-sm shadow-xl flex items-center justify-center space-x-2 animate-bounce flex-shrink-0">
           <span>{toastMsg}</span>
         </div>
       )}
 
-      {/* Main Workspace Layout */}
-      <div className="flex-1 flex overflow-hidden">
+      {/* Main Workspace Layout — full height minus header */}
+      <div className="flex-1 flex overflow-hidden min-h-0">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <main className="flex-1 overflow-y-auto p-6 bg-slate-950">
+        <main className="flex-1 overflow-y-auto p-8 bg-slate-950 space-y-0">
           {activeTab === 'dashboard' && (
             <DashboardView
               summary={summary}
@@ -135,12 +144,12 @@ export default function App() {
           )}
 
           {activeTab === 'map' && (
-            <div className="space-y-4 h-full">
-              <div className="flex items-center justify-between">
-                <h2 className="font-bold text-lg text-slate-100">GIS Road Network & Risk Heatmap</h2>
-                <span className="text-xs text-slate-400">Showing OpenStreetMap road lines, risk polygons & live location markers</span>
+            <div className="flex flex-col h-full space-y-4">
+              <div className="flex items-center justify-between flex-shrink-0">
+                <h2 className="font-bold text-xl text-slate-100">GIS Road Network & Risk Heatmap</h2>
+                <span className="text-xs text-slate-400">OpenStreetMap road lines, risk polygons & live location markers</span>
               </div>
-              <div className="h-[calc(100vh-180px)]">
+              <div className="flex-1 min-h-0">
                 <LeafletMap locations={locations} roads={roads} vehicles={vehicles} riskZones={riskZones} />
               </div>
             </div>
@@ -164,9 +173,7 @@ export default function App() {
             />
           )}
 
-          {activeTab === 'ml' && (
-            <MLDisruptionView />
-          )}
+          {activeTab === 'ml' && <MLDisruptionView />}
 
           {activeTab === 'disruptions' && (
             <DisruptionsView
@@ -177,10 +184,7 @@ export default function App() {
           )}
 
           {activeTab === 'vehicles' && (
-            <VehiclesView
-              vehicles={vehicles}
-              onRefresh={fetchAllData}
-            />
+            <VehiclesView vehicles={vehicles} onRefresh={fetchAllData} />
           )}
 
           {activeTab === 'bottlenecks' && (
@@ -191,9 +195,7 @@ export default function App() {
             />
           )}
 
-          {activeTab === 'analytics' && (
-            <AnalyticsView />
-          )}
+          {activeTab === 'analytics' && <AnalyticsView />}
         </main>
       </div>
     </div>

@@ -27,54 +27,54 @@ export default function DashboardView({
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Top Metrics Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
         {cards.map((card, idx) => {
           const Icon = card.icon;
           return (
-            <div key={idx} className={`p-4 rounded-xl border ${card.bg} space-y-2 backdrop-blur-sm transition-all hover:scale-[1.02]`}>
+            <div key={idx} className={`p-5 rounded-2xl border ${card.bg} space-y-3 backdrop-blur-sm transition-all hover:scale-[1.02] hover:shadow-lg`}>
               <div className="flex items-center justify-between text-slate-400">
-                <span className="text-xs font-semibold uppercase tracking-wider">{card.label}</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider">{card.label}</span>
                 <Icon className={`w-5 h-5 ${card.color}`} />
               </div>
-              <div className={`text-2xl font-bold ${card.color}`}>{card.value}</div>
+              <div className={`text-3xl font-black ${card.color}`}>{card.value}</div>
             </div>
           );
         })}
       </div>
 
       {/* Main Grid: Interactive Map & Live Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
         {/* Map Panel (2 cols) */}
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
+        <div className="lg:col-span-2 bg-slate-900 border border-slate-800/60 rounded-2xl p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-slate-100 flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
                 <span>Regional GIS Transportation Recovery Network</span>
               </h3>
-              <p className="text-xs text-slate-400">Real-time OpenStreetMap network view with risk zone overlays & vehicle positions</p>
+              <p className="text-xs text-slate-500 mt-0.5">Real-time OpenStreetMap with risk zone overlays & vehicle positions</p>
             </div>
             <button
               onClick={() => onNavigateTab('map')}
-              className="text-xs text-cyan-400 hover:underline flex items-center space-x-1"
+              className="text-xs text-cyan-400 hover:underline flex items-center space-x-1 flex-shrink-0"
             >
               <span>Expand Map</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          <div className="h-[400px]">
+          <div className="h-[480px]">
             <LeafletMap locations={locations} roads={roads} vehicles={vehicles} riskZones={riskZones} />
           </div>
         </div>
 
         {/* Live Recovery Recommendations & Top Bottlenecks Sidebar (1 col) */}
-        <div className="space-y-6">
+        <div className="space-y-7">
           {/* Recovery Recommendations */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div className="bg-slate-900 border border-slate-800/60 rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="font-bold text-sm text-slate-200 flex items-center space-x-2">
                 <AlertTriangle className="w-4 h-4 text-amber-400" />
                 <span>AI Recovery Recommendations</span>
@@ -87,9 +87,9 @@ export default function DashboardView({
               </button>
             </div>
 
-            <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+            <div className="space-y-3 max-h-[240px] overflow-y-auto pr-1">
               {recommendations.slice(0, 3).map(rec => (
-                <div key={rec.id} className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 space-y-1">
+                <div key={rec.id} className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-semibold text-cyan-400">{rec.title}</span>
                     <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
@@ -98,24 +98,24 @@ export default function DashboardView({
                       {rec.urgency}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300 line-clamp-2">{rec.description}</p>
+                  <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{rec.description}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Critical Logistics Bottlenecks */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div className="bg-slate-900 border border-slate-800/60 rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="font-bold text-sm text-slate-200 flex items-center space-x-2">
                 <Activity className="w-4 h-4 text-rose-400" />
                 <span>Detected Bottlenecks</span>
               </h3>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               {bottlenecks.slice(0, 3).map(bn => (
-                <div key={bn.road_id} className="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 space-y-1.5">
+                <div key={bn.road_id} className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-slate-200">{bn.road_name}</span>
                     <span className="text-xs font-bold text-rose-400">{bn.bottleneck_score} pts</span>
@@ -124,9 +124,9 @@ export default function DashboardView({
                     <div
                       className="bg-gradient-to-r from-amber-500 to-rose-500 h-1.5 rounded-full"
                       style={{ width: `${Math.min(100, bn.bottleneck_score)}%` }}
-                    ></div>
+                    />
                   </div>
-                  <p className="text-[11px] text-slate-400">{bn.recommendation}</p>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">{bn.recommendation}</p>
                 </div>
               ))}
             </div>
